@@ -1,0 +1,17 @@
+{
+  "destination": ".",
+  "source": ".",
+  "plugins": {
+    "metalsmith-markdown": {
+      "smartypants": true,
+      "gfm": true
+    },
+    "metalsmith-templates": {
+      "directory": "./",
+      "engine": "handlebars",
+      "pattern": "*.html",
+      "default": "template/index.html"
+    },
+  "metalsmith-permalinks": {}
+  }
+}

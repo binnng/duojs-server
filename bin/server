@@ -7,7 +7,6 @@ var watch = require("watch");
 var ip = require("ip").address();
 var exec = require("child-exec");
 var opn = require("opn");
-var livereload = require("livereload");
 var join = require("path").join;
 var root = join(__dirname, "..");
 

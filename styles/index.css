@@ -1,3 +1,2 @@
-a{
-	color: red;
-}
+@import 'necolas/normalize.css';
+@import './modules/theme.css';
