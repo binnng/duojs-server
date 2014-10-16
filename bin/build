@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+var path = require("path");
+var join = path.join;
+var extname = path.extname;
+var basename = path.basename;
+var root = join(__dirname, "..");
+var Duo = require("duo");
+var fs = require("fs");
+var write = require("write");
+
+var entry = [
+	join(root, "styles/index.css"),
+	join(root, "scripts/index.js")
+];
+
+var buildToPath = "build";
+
+console.log("build start...");
+
+entry.forEach(function(file, index) {
+	(new Duo(root))
+			.entry(file)
+			.global("DEBUG")
+			.run(function(err, src) {
+				if (err) throw err;
+
+				write.sync(buildToPath + "/build" + extname(file), src);
+
+				console.log("build " + basename(file) + " success!");
+
+			});
+});
