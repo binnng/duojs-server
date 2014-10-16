@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+var exec = require("child-exec");
+
+var command = [
+	"mkdir build",
+	"./node_modules/.bin/duo scripts/index.js > build/build.js",
+	"./node_modules/.bin/duo styles/index.css > build/build.css"
+];
+
+exec(command.join("&&"));

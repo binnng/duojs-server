@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+var path = require("path");
+var join = path.join;
+var extname = path.extname;
+var basename = path.basename;
+var root = join(__dirname, "..");
+var Duo = require("duo");
+var fs = require("fs");
+var write = require("write");
+var uglify = require("uglify-js");
+var cleanCss = new require("clean-css")();
+
+var entry = [
+	join(root, "build/build.css"),
+	join(root, "build/build.js")
+];
+
+var buildToPath = "build";
+
+console.log("publish start...");
+
+entry.forEach(function(file, index) {
+	write.sync(buildToPath + "/min.build" + extname(file), function() {
+		var ext = extname(file);
+		var content = "";
+		if (ext == ".js") {
+			content = uglify.minify(file, {
+				mangle: true
+			}).code;
+		}
+
+		if (ext == ".css") {
+			content = cleanCss.minify(fs.readFileSync(file));
+		}
+
+		return content;
+	}());
+	console.log("publish " + basename(file) + " success!");
+});

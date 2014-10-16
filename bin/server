@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+var koa = require("koa");
+var serve = require("koa-static");
+var logger = require("koa-logger");
+var watch = require("watch");
+var ip = require("ip").address();
+var exec = require("child-exec");
+var opn = require("opn");
+var livereload = require("livereload");
+var join = require("path").join;
+var root = join(__dirname, "..");
+
+var port = 8888;
+var url = "http://" + ip + ":" + port;
+var server = koa()
+	.use(logger())
+	.use(serve(root))
+	.listen(port);
+
+var staticPath = [
+	join(root, "scripts"), 
+	join(root, "styles")
+];
+
+// watch
+watch.createMonitor(root, {
+  ignoreDotFiles: true,
+  filter: function(path) {
+    return staticPath.indexOf(path > -1);
+  }
+}, function(monitor) {
+  var onFileChange;
+  onFileChange = function(file, curr, prev) {
+    if (file.match(/\.js|\.css$/) && !file.match(/build\//)) {
+      return exec("node bin/build");
+    }
+  };
+  monitor.on("created", onFileChange);
+  monitor.on("changed", onFileChange);
+  return monitor.on("removed", onFileChange);
+});
+
+// open in borwser
+console.log("Success! The server is running at: " + url);
+opn(url);
